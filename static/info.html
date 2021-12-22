@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+	<head>
+		<title>Mustprovning 2020 - info</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="UTF-8">
+		<script src="https://kulltomta.se/must/static/js/Chart.min.js"></script>
+		<link rel="stylesheet" href="https://kulltomta.se/must/static/js/jquery.mobile-1.4.5.min.css" />
+		<script src="https://kulltomta.se/must/static/js/jquery-1.11.1.min.js"></script>
+		<script src="https://kulltomta.se/must/static/js/jquery.mobile-1.4.5.min.js"></script>
+	</head>
+	<body oncontextmenu="return false;">
+			<canvas id="myChart" width="400px" height="400px"></canvas>
+			<script>
+			var ctx = document.getElementById('myChart').getContext('2d');
+			$.get( "https://kulltomta.se/must/api/get_score", function( data ) {
+
+				var labels = data.map(function(e) {
+				   return e[0];
+				});
+				var data = data.map(function(e) {
+				   return e[1];
+				});;
+
+				var config = {
+				    type: 'bar',
+				    data: {
+				        labels: labels,
+				        datasets: [{
+				            label: 'Antal poäng',
+				            data: data,
+				            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+				            borderColor: 'rgba(255, 99, 132, 1)',
+				            borderWidth: 1
+				        }]
+				    },
+				    options: {
+				        scales: {
+				            yAxes: [{
+				                ticks: {
+				                    beginAtZero: true
+				                }
+				            }]
+				        }
+				    }
+				}
+				var myChart = new Chart(ctx, config);
+			});
+			
+			</script>
+	</body>
+</html>
