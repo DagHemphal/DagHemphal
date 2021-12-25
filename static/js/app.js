@@ -99,11 +99,11 @@ $(document).ready(function(e) {
 		//if(username === null)
 			var username = $("input[name ='username']").val()
 		$("#best").append("&nbsp;&nbsp;  -  &nbsp;" + username);
-		$.get( "https://kulltomta.se/must/api/join/" + username, function( data ) {
+		$.get( "/api/join/" + username, function( data ) {
 		  console.log(data);
 		  var html = "";
 		  if (typeof data[0][1] === 'string')
-			$('#top').append('<a id="points" href="https://kulltomta.se/must/info">Se poängtavla</a>');
+			$('#top').append('<a id="points" href="/info">Se poängtavla</a>');
 		  for (li of data) {
 		  	if (typeof li[1] === 'string') {
 		  		html += '<li class="must">'
@@ -147,7 +147,7 @@ $(document).ready(function(e) {
 			console.log(data);
 	  		$.ajax({
 			    type: 'POST',
-			    url: 'https://kulltomta.se/must/api/done',
+			    url: '/api/done',
 			    data: JSON.stringify (data),
 			    success: function(data) { 
 			    	console.log(data);
@@ -160,7 +160,7 @@ $(document).ready(function(e) {
 				    		$('#send').off('click');
 				    		$('#order').off('taphold');
 				    	}
-				    	$('#top').append('<a id="points" href="https://kulltomta.se/must/info">Se poängtavla</a>');
+				    	$('#top').append('<a id="points" href="/info">Se poängtavla</a>');
 
 					}			    	
 			    },

@@ -3,16 +3,16 @@
 		<title>Mustprovning 2020 - info</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta charset="UTF-8">
-		<script src="https://kulltomta.se/must/static/js/Chart.min.js"></script>
-		<link rel="stylesheet" href="https://kulltomta.se/must/static/js/jquery.mobile-1.4.5.min.css" />
-		<script src="https://kulltomta.se/must/static/js/jquery-1.11.1.min.js"></script>
-		<script src="https://kulltomta.se/must/static/js/jquery.mobile-1.4.5.min.js"></script>
+		<script src="/static/js/Chart.min.js"></script>
+		<link rel="stylesheet" href="/static/js/jquery.mobile-1.4.5.min.css" />
+		<script src="/static/js/jquery-1.11.1.min.js"></script>
+		<script src="/static/js/jquery.mobile-1.4.5.min.js"></script>
 	</head>
 	<body oncontextmenu="return false;">
 			<canvas id="myChart" width="400px" height="400px"></canvas>
 			<script>
 			var ctx = document.getElementById('myChart').getContext('2d');
-			$.get( "https://kulltomta.se/must/api/get_score", function( data ) {
+			$.get( "/api/get_score", function( data ) {
 
 				var labels = data.map(function(e) {
 				   return e[0];

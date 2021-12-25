@@ -27,6 +27,10 @@ CREATE TABLE User (
 	  REFERENCES Game (id)
 );
 
+CREATE TABLE Round (
+	id
+);
+
 CREATE TABLE Game (
 	id INTEGER,
 	game_number INTEGER,
@@ -36,17 +40,9 @@ CREATE TABLE Game (
 	  REFERENCES Soda (name)
 );
 
-INSERT INTO Soda(name)
-VALUES('nygårda');
 
 INSERT INTO Soda(name)
 VALUES('apotekarnes');
-
-INSERT INTO Soda(name)
-VALUES('freeway');
-
-INSERT INTO Soda(name)
-VALUES('favorit');
 
 INSERT INTO Soda(name)
 VALUES('premier');

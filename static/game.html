@@ -3,10 +3,10 @@
 		<title>Mustprovning 2020 - info</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta charset="UTF-8">
-		<link rel="stylesheet" href="https://kulltomta.se/must/static/css/main.css">
-		<link rel="stylesheet" href="https://kulltomta.se/must/static/css/jquery.mobile-1.4.5.min.css" />
-		<script src="https://kulltomta.se/must/static/js/jquery-1.11.1.min.js"></script>
-		<script src="https://kulltomta.se/must/static/js/jquery.mobile-1.4.5.min.js"></script>
+		<link rel="stylesheet" href="/static/css/main.css">
+		<link rel="stylesheet" href="/static/css/jquery.mobile-1.4.5.min.css" />
+		<script src="/static/js/jquery-1.11.1.min.js"></script>
+		<script src="/static/js/jquery.mobile-1.4.5.min.js"></script>
 	</head>
 	<body oncontextmenu="return false;">
 			<ul id="view">
@@ -24,7 +24,7 @@
 
 					$.ajax({
 					    type: 'POST',
-					    url: 'https://kulltomta.se/must/api/add_soda',
+					    url: '/api/add_soda',
 					    data: JSON.stringify (soda_name),
 					    success: function(data) { 
 					    	console.log(data);
@@ -42,10 +42,10 @@
 					}
 					$("#view").append(html);
 				}
-				$.get( "https://kulltomta.se/must/api/get_game", get_game);
+				$.get( "/api/get_game", get_game);
 				$("#new").click(function(e){
 					if (confirm("Är du säker på att du vill starta ett nytt spel?")) {
-						$.get( "https://kulltomta.se/must/api/new_game", get_game);
+						$.get( "/api/new_game", get_game);
 					}
 				})
 			</script>
