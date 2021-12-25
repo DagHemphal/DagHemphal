@@ -8,6 +8,36 @@ CREATE TABLE Soda (
 	name VARCHAR PRIMARY KEY
 );
 
+CREATE TABLE Game (
+	id INTEGER PRIMARY KEY,
+	year_date DATE
+);
+
+CREATE TABLE Round (
+	id INTEGER,
+	round_number INTEGER,
+	game_id INTEGER,
+	soda_name VARCHAR,
+	PRIMARY KEY (id, soda_name)
+	FOREIGN KEY (game_id)
+	  REFERENCES Game (id)
+	FOREIGN KEY (soda_name) 
+	  REFERENCES Soda (name)
+);
+
+CREATE TABLE User (
+	name VARCHAR PRIMARY KEY,
+);
+
+CREATE TABLE User_games (
+	user_name VARCHAR,
+	round_id INTEGER,
+	FOREIGN KEY (user_name) 
+	  REFERENCES User (name)
+	FOREIGN KEY (round_id) 
+	  REFERENCES Round (id)
+);
+
 CREATE TABLE Score (
 	soda_name VARCHAR,
 	user_name VARCHAR,
@@ -20,25 +50,11 @@ CREATE TABLE Score (
 	  REFERENCES User (name)
 );
 
-CREATE TABLE User (
-	name VARCHAR PRIMARY KEY,
-	game_id INTEGER,
-	FOREIGN KEY (game_id) 
-	  REFERENCES Game (id)
-);
 
-CREATE TABLE Round (
-	id
-);
 
-CREATE TABLE Game (
-	id INTEGER,
-	game_number INTEGER,
-	soda_name VARCHAR,
-	PRIMARY KEY (id, soda_name)
-	FOREIGN KEY (soda_name) 
-	  REFERENCES Soda (name)
-);
+
+
+
 
 
 INSERT INTO Soda(name)
