@@ -18,10 +18,10 @@ CREATE TABLE Round (
 	round_number INTEGER,
 	game_id INTEGER,
 	soda_name VARCHAR,
-	PRIMARY KEY (id, soda_name)
+	PRIMARY KEY (id, soda_name),
 	FOREIGN KEY (game_id)
-	  REFERENCES Game (id)
-	FOREIGN KEY (soda_name) 
+	  REFERENCES Game (id),
+	FOREIGN KEY (soda_name)
 	  REFERENCES Soda (name)
 );
 
@@ -31,11 +31,11 @@ CREATE TABLE User (
 
 CREATE TABLE User_games (
 	user_name VARCHAR,
-	round_id INTEGER,
+	game_id INTEGER,
 	FOREIGN KEY (user_name) 
-	  REFERENCES User (name)
-	FOREIGN KEY (round_id) 
-	  REFERENCES Round (id)
+	  REFERENCES User (name),
+	FOREIGN KEY (game_id) 
+	  REFERENCES Game (id)
 );
 
 CREATE TABLE Score (
@@ -43,11 +43,14 @@ CREATE TABLE Score (
 	user_name VARCHAR,
 	placement INTEGER,
 	score INTEGER,
+	game_id INTEGER,
 	PRIMARY KEY (soda_name, user_name),
 	FOREIGN KEY (soda_name) 
 	  REFERENCES Soda (name),
 	FOREIGN KEY (user_name) 
-	  REFERENCES User (name)
+	  REFERENCES User (name),
+	FOREIGN KEY (game_id)
+	  REFERENCES Game (id)
 );
 
 
@@ -63,7 +66,7 @@ VALUES('apotekarnes');
 INSERT INTO Soda(name)
 VALUES('premier');
 
-
+#fix to round
 INSERT INTO Game (id, game_number, soda_name)
 	SELECT ifnull(game_id, 0), game_number, name FROM 
 		(SELECT row_number() over(ORDER BY random()) AS game_number, name FROM soda ),
