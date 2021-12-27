@@ -91,38 +91,64 @@ $(document).ready(function(e) {
 		
 	});
 
+	$.get( "/api/get_games", function( data ) {
+		console.log(data);
+		var select = $("#game");
+		var ret;
+		for (const [game_id, date] of data) {
+			ret += "<option value="+game_id+">"+date+" spel:"+game_id+"</option>"
+		};
+		
+		select.append(ret);
+	});
 
 	$("form").submit(function (e){
-		console.log("hejs");
 		e.preventDefault();
 		//var username = localStorage.getItem('username')
 		//if(username === null)
-			var username = $("input[name ='username']").val()
+		var game_id = $("#game").val();
+		console.log(game_id);
+		var username = $("input[name ='username']").val();
 		$("#best").append("&nbsp;&nbsp;  -  &nbsp;" + username);
-		$.get( "/api/join/" + username, function( data ) {
-		  console.log(data);
-		  var html = "";
-		  if (typeof data[0][1] === 'string')
-			$('#top').append('<a id="points" href="/info">Se poängtavla</a>');
-		  for (li of data) {
-		  	if (typeof li[1] === 'string') {
-		  		html += '<li class="must">'
-				html +=	'<div class="id">'+ li[0] +'</div>'
-				html += "<div class='name'>"+ li[1] +"</div>";
-				html += '</li>'
-				$('#send').off('click');
-				$('#order').off('taphold');
-		  	}
-		  	else {
-			  	html += '<li class="must">'
-				html +=	'<div class="id" value="'+li[0]+'">'+ li[1] +'</div>'
-				html += '</li>'
-			}
-		  }
-		  $("#order").append(html);
-		  $("#wrapper").show();
-		  $("form").hide();
-		  localStorage.setItem('username', username);
+		var data = [];
+		data.push({
+	  			game_id: game_id,
+	  			username: username
+	  		});
+
+		$.ajax({
+		    type: 'POST',
+		    url: '/api/join',
+		    data: JSON.stringify(data),
+		    success: function( data ) {
+			  console.log(data);
+			  var html = "";
+			  if (typeof data[0][1] === 'string')
+				$('#top').append('<a id="points" href="/info">Se poängtavla</a>');
+			  for (li of data) {
+			  	if (typeof li[1] === 'string') {
+			  		html += '<li class="must">'
+					html +=	'<div class="id">'+ li[0] +'</div>'
+					html += "<div class='name'>"+ li[1] +"</div>";
+					html += '</li>'
+					$('#send').off('click');
+					$('#order').off('taphold');
+			  	}
+			  	else {
+				  	html += '<li class="must">'
+					html +=	'<div class="id" value="'+li[0]+'">'+ li[1] +'</div>'
+					html += '</li>'
+				}
+			  }
+			  $("#order").append(html);
+			  $("#wrapper").show();
+			  $("form").hide();
+			  localStorage.setItem('game_id', game_id);
+			  if (data)
+			  localStorage.setItem('username', username);
+			},
+			contentType: "application/json",
+			dataType: 'json'
 		});
   	});
 
@@ -135,12 +161,11 @@ $(document).ready(function(e) {
 	  		var data = [];
 	  		var username = localStorage.getItem('username');
 	  		data.push({
-	  			game_id: $(".id:first").attr('value'),
 	  			username: username
 	  		});
 			$('.id').each(function(index){
 			    data.push({
-			        game_number: $(this).text(),
+			        round_number: $(this).text(),
 			        placement: index + 1
 			    });
 			});

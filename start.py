@@ -53,24 +53,67 @@ def init():
 	init_db()
 	return "inited"
 
-@app.route('/api/join/<username>')
-def show_sodas(username):
-	query_db("""insert or ignore into User (name, game_id)
-		SELECT LOWER(?), count(distinct id) - 1 as game_id from Game
-		""", [username])
+@app.route('/api/get_games')
+def get_games():
+	res = query_db("""select id, year_date from Game Order by id desc""")
+	return jsonify(res)
 
-	res = query_db("""
-		select game_number, user.soda_name from game,
-		(select score.*, game_id from score,user where score.user_name = user.name and user.name = lower(?)) as user
-		where game.id = user.game_id 
-		and game.soda_name = user.soda_name
-		order by placement;
-		""", [username])
-	if not res:
-		res = query_db("""
-			select id, game_number from Game where id = (select game_id from User where name = lower(?))
-			""", [username])
-	return jsonify(res) #skicka username som kaka!
+@app.route('/api/join', methods=['POST'])
+def show_sodas():
+	if request.is_json:
+		data = request.get_json()
+		username = data[0]['username']
+		game_id = data[0]['game_id']
+		
+
+		#get users ranking of sodas for specific game
+		res = query_db("""select round_number, Round.soda_name 
+			from Round, User, Score
+			where round.game_id=?
+			and User.name = LOWER(?)
+			and round.game_id = User.game_id
+			and round.game_id = Score.game_id 
+			and round.id = user.round_id
+			and User.name = Score.user_name
+			and Round.soda_name = Score.soda_name
+			order by placement""",[game_id, username])
+		
+		lastest_game = query_db("select max(id) from game")
+		if int(game_id) >= lastest_game[0][0]:
+			print("hej")
+			#check if user have sent score
+			score = query_db("""select * 
+				FROM Score 
+				where user_name = lower(?) 
+				and game_id = (select max(id) from Game)""", [username])
+			if not score:
+				#Add user to this round of latest game
+				query_db("""insert or ignore into User (name, game_id, round_id)
+					SELECT LOWER(?), game_id, count(distinct id) - 1 as round_id from Round WHERE game_id IN(SELECT MAX(id) FROM Game)
+					""", [username])
+
+				#todo check if if user have sent score before update
+				query_db("""update User
+					SET round_id = (select max(id) from Round WHERE game_id = (select max(id) from Game))
+					WHERE game_id = (select max(id) from Game)
+					and name = LOWER(?);""", [username])
+				#select sodas id and the randomized number
+				res = query_db("""select game_id, round_number
+					from Round 
+					WHERE id in (select max(id)
+						from Round 
+						where game_id = (select max(id) from Game)
+					)
+					and game_id = (select max(id) from Game)
+					""")
+
+		
+		#if user not sent score for a round return this
+		if not res:
+			return jsonify("no data")
+		return jsonify(res) #skicka username som kaka!
+	return jsonify(message='Error')
+
 
 #post
 @app.route('/api/done', methods=['POST'])
@@ -78,21 +121,40 @@ def send_soda_rankning():
 	if request.is_json:
 		sodas = request.get_json()
 		username = sodas[0]['username']
-		game_id = sodas[0]['game_id']
 
-		new_game = query_db("select count(distinct id) as game_id from Game")
-		if (new_game[0][0] - 1) == int(game_id):
-			return jsonify(message='Vänta på att spelet är slut')
+		#get latest round from latest game.
+		new_game = query_db("""select * 
+			FROM Round, User 
+			WHERE Round.game_id = (select MAX(id) from Game) 
+			and Round.game_id = User.game_id
+			and User.name = lower(?) 
+			and Round.id in (select max(id) 
+				from round 
+				WHERE game_id = (select MAX(id) from Game))
+			and Round.id = User.round_id""",[username])
+		print (new_game)
+		if new_game:
+			return jsonify(message='Vänta på att rundan är slut')
 		
 		sodas.pop(0)
-
+		#add sodas score
 		for soda in sodas:
 			score = len(sodas) - (soda['placement'] -1)
-			query_db("""insert or ignore into score (soda_name, user_name, placement, score)
-			select soda_name, lower(?), ?, ? from game where id=? and game_number=? 
-			""", [username, soda['placement'], score, game_id, soda['game_number']])
+			query_db("""insert OR IGNORE INTO Score (soda_name, user_name, placement, score, game_id)
+				SELECT soda_name, name, ?, ?, game_id FROM(
+				Select max(id), * 
+				from round, User 
+				where round_number=? 
+				and round.game_id =(select max(id) from Game) 
+				and User.name = lower(?)
+				and round.game_id=User.game_id)
+			""", [soda['placement'], score, soda['round_number'], username])
 
-		res = query_db("select soda_name from score where user_name = lower(?) order by placement", [username])
+		res = query_db("""select soda_name 
+			FROM Score 
+			where game_id=(select max(id) from game) 
+			and user_name = lower(?);
+""", [username])
 		return jsonify(res) #return name for soda.
 	return jsonify(message='Error')
 
@@ -101,35 +163,58 @@ def send_soda_rankning():
 def add_soda():
 	if request.is_json:
 		soda = request.get_json()
-		res = query_db("""insert or ignore into soda(name) 
-			VALUES(LOWER(?))
+
+		res = query_db("""insert or ignore into soda(game_id, name) 
+			SELECT MAX(id), LOWER(?) FROM Game
 		""", [soda])
 		return jsonify(res)
 	return jsonify(message='error')
 
-#get
-@app.route('/api/get_score')
+#todo select by game_id
+@app.route('/api/get_score', methods=['POST'])
 def get_score():
-	res = query_db("select soda_name, sum(score) as sum_score from score group by soda_name order by sum_score desc");
-	return jsonify(res);
+	if request.is_json:
+		game_id = request.get_json()
+		res = query_db("""select soda_name, sum(score) as sum_score 
+			from score
+			where game_id = ?
+			group by soda_name 
+			order by sum_score desc""",[game_id]);
+		return jsonify(res);
+	return jsonify(message='error')
 
 @app.route('/api/new_game')
 def new_game():
+	res = query_db("insert INTO Game (year_date) SELECT DATE()")
+	res = query_db("""insert or ignore into soda(game_id, name) 
+			SELECT MAX(id), LOWER(?) FROM Game
+		""", ['apotekarnes'])
+	return new_round()
 
-	query_db("""insert into Game (id, game_number, soda_name)
-	select ifnull(game_id, 0), game_number, name from 
-		(select row_number() over(order by random()) as game_number, name from soda ),
-		(select count(distinct id) as game_id from Game)
+
+@app.route('/api/new_round')
+def new_round():
+
+	#create new round
+	query_db("""insert INTO Round (id, round_number, game_id, soda_name)
+	SELECT ifnull(round_id, 0), round_number, game, name FROM 
+		(SELECT row_number() over(ORDER BY random()) AS round_number, name 
+			FROM Soda WHERE game_id IN(SELECT MAX(id) FROM Game)),
+		(SELECT MAX(id) AS game FROM Game),
+		(SELECT COUNT(distinct id) AS round_id FROM Round WHERE game_id IN(SELECT MAX(id) FROM Game))
 	""")
 
-	res = query_db("select * from game where id = (select count(distinct id) as id from Game) - 1")
+	return get_round()
 
-	return jsonify(res)
-
-@app.route('/api/get_game')
-def get_game():
-
-	res = query_db("select * from game where id = (select count(distinct id) as id from Game) - 1")
+@app.route('/api/get_round')
+def get_round():
+	res = query_db("""select *
+		from Round 
+		WHERE id in (select max(id)
+			from Round 
+			where game_id = (select max(id) from Game)
+		)
+		and game_id = (select max(id) from Game)""")
 
 	return jsonify(res)
 

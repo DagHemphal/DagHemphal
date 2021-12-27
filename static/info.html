@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 	<head>
-		<title>Mustprovning 2020 - info</title>
+		<title>Mustprovning - info</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta charset="UTF-8">
 		<script src="/static/js/Chart.min.js"></script>
@@ -12,38 +12,47 @@
 			<canvas id="myChart" width="400px" height="400px"></canvas>
 			<script>
 			var ctx = document.getElementById('myChart').getContext('2d');
-			$.get( "/api/get_score", function( data ) {
+			var game_id = localStorage.getItem('game_id');
+			$.ajax({
+			    type: 'POST',
+			    url: '/api/get_score',
+			    data: JSON.stringify(game_id),
+			    success: function( data ) {
 
-				var labels = data.map(function(e) {
-				   return e[0];
-				});
-				var data = data.map(function(e) {
-				   return e[1];
-				});;
+					var labels = data.map(function(e) {
+					   return e[0];
+					});
+					var data = data.map(function(e) {
+					   return e[1];
+					});;
 
-				var config = {
-				    type: 'bar',
-				    data: {
-				        labels: labels,
-				        datasets: [{
-				            label: 'Antal poäng',
-				            data: data,
-				            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-				            borderColor: 'rgba(255, 99, 132, 1)',
-				            borderWidth: 1
-				        }]
-				    },
-				    options: {
-				        scales: {
-				            yAxes: [{
-				                ticks: {
-				                    beginAtZero: true
-				                }
-				            }]
-				        }
-				    }
-				}
-				var myChart = new Chart(ctx, config);
+					var config = {
+					    type: 'bar',
+					    data: {
+					        labels: labels,
+					        datasets: [{
+					            label: 'Antal poäng',
+					            data: data,
+					            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+					            borderColor: 'rgba(255, 99, 132, 1)',
+					            borderWidth: 1
+					        }]
+					    },
+					    options: {
+					        scales: {
+					            yAxes: [{
+					                ticks: {
+					                    beginAtZero: true
+					                }
+					            }]
+					        }
+					    }
+					}
+					var myChart = new Chart(ctx, config);
+				},
+				contentType: "application/json",
+				dataType: 'json'
+
 			});
 			
 			</script>

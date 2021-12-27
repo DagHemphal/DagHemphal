@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 	<head>
-		<title>Mustprovning 2020 - info</title>
+		<title>Mustprovning - gamemaster</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta charset="UTF-8">
 		<link rel="stylesheet" href="/static/css/main.css">
@@ -12,7 +12,8 @@
 			<ul id="view">
 				
 			</ul>
-			<button id="new">Nytt spel</button>
+			<button id="new_round">Ny runda</button>
+			<button id="new_game">Nytt spel</button>
 			<form style="display: block">
 			  Ny julmust<input type="text" name="soda_name" required>
 			  <input type="submit" value="Submit">
@@ -36,14 +37,22 @@
 				});
 				function get_game(data) {
 					$("#view").empty();
-					html = '<li class="must">-- Game nummer: ' + data[0][0] + ' --</li>';
+					html = '<li class="must">-- Game: ' + data[0][2]
+						+ ', Round:' + data[0][0]
+						+ ' --</li>';
 					for (li of data) {
-						html += '<li class="must">' + li[2] + ': ' + li[1] + '</li>';
+						html += '<li class="must">' + li[3] + ': ' + li[1] + '</li>';
 					}
 					$("#view").append(html);
 				}
-				$.get( "/api/get_game", get_game);
-				$("#new").click(function(e){
+				$.get( "/api/get_round", get_game);
+				$("#new_round").click(function(e){
+					if (confirm("Är du säker på att du vill starta ett ny runda?")) {
+						$.get( "/api/new_round", get_game);
+					}
+				})
+
+				$("#new_game").click(function(e){
 					if (confirm("Är du säker på att du vill starta ett nytt spel?")) {
 						$.get( "/api/new_game", get_game);
 					}
