@@ -1,14 +1,14 @@
-#Must-spel
+# Must-spel
 
 Spel för användning av provning av julmust
 
-##Start
+## Start
 För att starta spelet kör
 ```
 python start.py
 ```
 Anslut till localhost:5000
-##Spelets gång
+## Spelets gång
 Sidan startas genom att spel ansvarig går in på sidan localhost:5000/gamemaster
 Där kan den ansvariga skapa nytt spel starta ny runda för att slumpa fram ny siffror för dryckerna.
 Dessutom kan man lägga till mer julmustsorter dessa kommer att visas när en ny runda startas.
