@@ -25,7 +25,7 @@ När spelaren har anlutit sig så kan den välja vilken julmust de gillade best 
 
 När spelaren är klar kan den skicka in det. för att svaret ska skickas in måste spelansvarig skapa en ny runda.
 
-![resultat](images/resultat.png)
+![resultat](images/result.png)
 
 När spelaren har skickat in resultatet så kan den kolla vilken julmust som ligger bäst till genom att klicka på poängtavla.
 
