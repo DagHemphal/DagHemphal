@@ -3,10 +3,10 @@
 		<title>Mustprovning - info</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta charset="UTF-8">
-		<script src="static/js/Chart.min.js"></script>
-		<link rel="stylesheet" href="static/js/jquery.mobile-1.4.5.min.css" />
-		<script src="static/js/jquery-1.11.1.min.js"></script>
-		<script src="static/js/jquery.mobile-1.4.5.min.js"></script>
+		<script src="./static/js/Chart.min.js"></script>
+		<link rel="stylesheet" href="./static/js/jquery.mobile-1.4.5.min.css" />
+		<script src="./static/js/jquery-1.11.1.min.js"></script>
+		<script src="./static/js/jquery.mobile-1.4.5.min.js"></script>
 	</head>
 	<body oncontextmenu="return false;">
 			<canvas id="myChart" width="400px" height="400px"></canvas>
@@ -15,7 +15,7 @@
 			var game_id = localStorage.getItem('game_id');
 			$.ajax({
 			    type: 'POST',
-			    url: 'api/get_score',
+			    url: './api/get_score',
 			    data: JSON.stringify(game_id),
 			    success: function( data ) {
 
