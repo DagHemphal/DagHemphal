@@ -57,16 +57,13 @@ CREATE TABLE Score (
 
 -- CREATING test data
 --Create new game
-INSERT INTO Game (year_date)
+/*INSERT INTO Game (year_date)
 	SELECT DATE();
 
 
 --add soda to game
 INSERT INTO Soda(game_id, name)
 	SELECT MAX(id), LOWER('apotekarnes') FROM Game;
-
-INSERT INTO Soda(game_id, name)
-	SELECT MAX(id), LOWER('premier') FROM Game;
 
 --add new round
 INSERT INTO Round (id, round_number, game_id, soda_name)
@@ -75,49 +72,10 @@ INSERT INTO Round (id, round_number, game_id, soda_name)
 			FROM Soda WHERE game_id IN(SELECT MAX(id) FROM Game)),
 		(SELECT MAX(id) AS game FROM Game),
 		(SELECT COUNT(distinct id) AS round_id FROM Round WHERE game_id IN(SELECT MAX(id) FROM Game));
-
+/*
 --add new user to latest round and game
 INSERT OR IGNORE INTO User (name, game_id, round_id)
 		SELECT LOWER('test'), 1, COUNT(distinct id) - 1 AS round_id FROM Round WHERE game_id IN(SELECT MAX(id) FROM Game);
-
---add new game
-INSERT INTO Game (year_date)
-	SELECT DATE();
-
---add soda to game
-INSERT INTO Soda(game_id, name)
-	SELECT MAX(id), LOWER('coop') FROM Game;
-
-INSERT INTO Soda(game_id, name)
-	SELECT MAX(id), LOWER('freeway') FROM Game;
-
-INSERT INTO Soda(game_id, name)
-	SELECT MAX(id), LOWER('apotekarnes') FROM Game;
-
---add new round
-INSERT INTO Round (id, round_number, game_id, soda_name)
-	SELECT ifnull(round_id, 0), round_number, game, name FROM 
-		(SELECT row_number() over(ORDER BY random()) AS round_number, name 
-			FROM Soda WHERE game_id IN(SELECT MAX(id) FROM Game)),
-		(SELECT MAX(id) AS game FROM Game),
-		(SELECT COUNT(distinct id) AS round_id FROM Round WHERE game_id IN(SELECT MAX(id) FROM Game));
-
---add new user to latest round and game
-INSERT OR IGNORE INTO User (name, game_id, round_id)
-		SELECT LOWER('test'), 2, COUNT(distinct id) - 1 AS round_id FROM Round WHERE game_id IN(SELECT MAX(id) FROM Game);
-
---add new round
-INSERT INTO Round (id, round_number, game_id, soda_name)
-	SELECT ifnull(round_id, 0), round_number, game, name FROM 
-		(SELECT row_number() over(ORDER BY random()) AS round_number, name 
-			FROM Soda WHERE game_id IN(SELECT MAX(id) FROM Game)),
-		(SELECT MAX(id) AS game FROM Game),
-		(SELECT COUNT(distinct id) AS round_id FROM Round WHERE game_id IN(SELECT MAX(id) FROM Game));
-
-
---add new user to latest round and game
-INSERT OR IGNORE INTO User (name, game_id, round_id)
-	SELECT LOWER('testab'), 2, COUNT(distinct id) - 1 AS round_id FROM Round WHERE game_id IN(SELECT MAX(id) FROM Game);
 
 --add score to user test
 INSERT OR IGNORE INTO Score (soda_name, user_name, placement, score, game_id)
@@ -126,20 +84,4 @@ INSERT OR IGNORE INTO Score (soda_name, user_name, placement, score, game_id)
 	WHERE Soda.name = LOWER('apotekarnes')
 	AND User.game_id = Soda.game_id
 	AND User.name = LOWER('test')
-	AND User.game_id = 2;
-
-INSERT OR IGNORE INTO Score (soda_name, user_name, placement, score, game_id)
-	SELECT Soda.name, User.name, '1', 20, User.game_id 
-	FROM Soda, User
-	WHERE Soda.name = LOWER('coop')
-	AND User.game_id = Soda.game_id
-	AND User.name = LOWER('test')
-	AND User.game_id = 2;
-
-INSERT OR IGNORE INTO Score (soda_name, user_name, placement, score, game_id)
-	SELECT Soda.name, User.name, '3', 20, User.game_id 
-	FROM Soda, User
-	WHERE Soda.name = LOWER('freeway')
-	AND User.game_id = Soda.game_id
-	AND User.name = LOWER('test')
-	AND User.game_id = 2;
+	AND User.game_id = 2;*/

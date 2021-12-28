@@ -91,7 +91,7 @@ $(document).ready(function(e) {
 		
 	});
 
-	$.get( "/api/get_games", function( data ) {
+	$.get( "api/get_games", function( data ) {
 		console.log(data);
 		var select = $("#game");
 		var ret;
@@ -118,13 +118,13 @@ $(document).ready(function(e) {
 
 		$.ajax({
 		    type: 'POST',
-		    url: '/api/join',
+		    url: 'api/join',
 		    data: JSON.stringify(data),
 		    success: function( data ) {
 			  console.log(data);
 			  var html = "";
 			  if (typeof data[0][1] === 'string')
-				$('#top').append('<a id="points" href="/info">Se poängtavla</a>');
+				$('#top').append('<a id="points" href="info">Se poängtavla</a>');
 			  for (li of data) {
 			  	if (typeof li[1] === 'string') {
 			  		html += '<li class="must">'
@@ -172,7 +172,7 @@ $(document).ready(function(e) {
 			console.log(data);
 	  		$.ajax({
 			    type: 'POST',
-			    url: '/api/done',
+			    url: 'api/done',
 			    data: JSON.stringify (data),
 			    success: function(data) { 
 			    	console.log(data);
