@@ -23,21 +23,14 @@ CREATE TABLE Round (
 	game_id INTEGER,
 	soda_name VARCHAR,
 	PRIMARY KEY (id, game_id, soda_name),
-	FOREIGN KEY (game_id)
-	  REFERENCES Game (id),
-	FOREIGN KEY (soda_name)
-	  REFERENCES Soda (name)
+	FOREIGN KEY (soda_name, game_id) REFERENCES Soda (name, game_id)
 );
 
 CREATE TABLE User (
 	name VARCHAR,
 	game_id INTEGER,
 	round_id INTEGER,
-	PRIMARY KEY (name, game_id),
-	FOREIGN KEY (game_id)
-	  REFERENCES Game (id),
-	FOREIGN KEY (round_id)
-	  REFERENCES Round (id)
+	PRIMARY KEY (name, game_id)
 );
 
 CREATE TABLE Score (
@@ -47,12 +40,10 @@ CREATE TABLE Score (
 	score INTEGER,
 	game_id INTEGER,
 	PRIMARY KEY (user_name, game_id, soda_name),
-	FOREIGN KEY (soda_name)
-	  REFERENCES Soda (name),
-	FOREIGN KEY (user_name) 
-	  REFERENCES User (name),
-	FOREIGN KEY (game_id)
-	  REFERENCES Game (id)
+	FOREIGN KEY (soda_name, game_id)
+	  REFERENCES Soda (name, game_id),
+	FOREIGN KEY (user_name, game_id) 
+	  REFERENCES User (name, game_id)
 );
 
 -- CREATING test data

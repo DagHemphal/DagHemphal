@@ -137,9 +137,10 @@ def send_soda_rankning():
 			return jsonify(message='Vänta på att rundan är slut')
 		
 		sodas.pop(0)
-		#add sodas score # fixa data pass 2022-12-24 den tog nästa rundas number ändra i databasen
+		#add sodas score # fixa ifall man klicakr på nytt spel innan ny runda så kommer inte poängen räknas med från senaste rundan 
 		for soda in sodas:
 			score = len(sodas) - (soda['placement'] -1)
+			print(soda)
 			query_db("""insert OR IGNORE INTO Score (soda_name, user_name, placement, score, game_id)
 				SELECT soda_name, name, ?, ?, game_id FROM(
 				Select * 
@@ -148,7 +149,7 @@ def send_soda_rankning():
 				and round.game_id =(select max(id) from Game) 
 				and User.name = lower(?)
 				and round.game_id=User.game_id
-				and round.id = (select max(id)-1 from Round where round.game_id = User.game_id)
+				and round.id = User.round_id
 				)
 				
 			""", [soda['placement'], score, soda['round_number'], username])
@@ -158,7 +159,7 @@ def send_soda_rankning():
 			where game_id=(select max(id) from game) 
 			and user_name = lower(?)
 			order by placement;
-""", [username])
+			""", [username])
 		return jsonify(res) #return name for soda.
 	return jsonify(message='Error')
 
