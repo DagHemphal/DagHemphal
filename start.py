@@ -190,9 +190,6 @@ def get_score():
 @app.route('/api/new_game')
 def new_game():
 	res = query_db("insert INTO Game (year_date) SELECT DATE()")
-	res = query_db("""insert or ignore into soda(game_id, name) 
-			SELECT MAX(id), LOWER(?) FROM Game
-		""", ['apotekarnes'])
 	return new_round()
 
 
