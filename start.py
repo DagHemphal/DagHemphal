@@ -183,8 +183,8 @@ def get_score():
 			from score
 			where game_id = ?
 			group by soda_name 
-			order by sum_score desc""",[game_id]);
-		return jsonify(res);
+			order by sum_score desc""",[game_id])
+		return jsonify(res)
 	return jsonify(message='error')
 
 @app.route('/api/new_game')
