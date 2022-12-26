@@ -20,8 +20,9 @@
 			
 		<form style="display: block">
 			<label>Välj år:</label>
-			<select name="game" id="game"></select> 
-			Namn <input type="text" name="username" required>
+			<select name="game" id="game"></select>
+			Namn <input autocomplete="off" id="usernameInput" placeholder="Type a your name here..." type="text" name="username" required>
+			<ul class="list"></ul>
 			<input type="submit" value="Submit">
 		</form> 
 		

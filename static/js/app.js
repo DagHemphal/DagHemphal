@@ -102,6 +102,12 @@ $(document).ready(function(e) {
 		select.append(ret);
 	});
 
+	$.get( "./api/get_users", function( data ) {
+		console.log(data);
+		var usernameInput = document.getElementById("usernameInput");		
+		usernameInput.addEventListener("keyup", function () {autoComplete(data);}, false);
+	});
+
 	$("form").submit(function (e){
 		e.preventDefault();
 		//var username = localStorage.getItem('username')
@@ -209,4 +215,44 @@ function scrollplus(){
 function scrollminus(){
 	var scrollPos = $(window).scrollTop();
 	$(document).scrollTop(scrollPos - 3);
+}
+
+
+function autoComplete(usersData) {
+	//loop through above array
+	//Initially remove all elements ( so if user erases a letter or adds new letter then clean previous outputs)
+	var game_id = $("#game").val();
+	let userDataGame = usersData[game_id-1];
+	var usernameInput = document.getElementById("usernameInput");
+	removeElements();
+	for (let i of userDataGame) {
+		//convert input to lowercase and compare with each string
+		if (i.toLowerCase().startsWith(usernameInput.value.toLowerCase()) && usernameInput.value != "") {
+			//create li element
+			let listItem = document.createElement("li");
+			//One common class name
+			listItem.classList.add("list-items");
+			listItem.style.cursor = "pointer";
+			listItem.setAttribute("onclick", "displayNames('" + i + "')");
+			//Display matched part in bold
+			let word = "<b>" + i.substr(0, usernameInput.value.length) + "</b>";
+			word += i.substr(usernameInput.value.length);
+			//display the value in array
+			listItem.innerHTML = word;
+			document.querySelector(".list").appendChild(listItem);
+		}
+	}
+}
+
+function displayNames(value) {
+	var usernameInput = document.getElementById("usernameInput");
+	usernameInput.value = value;
+	removeElements();
+}
+function removeElements() {
+	//clear all the item
+	let items = document.querySelectorAll(".list-items");
+	items.forEach((item) => {
+	  item.remove();
+	});
 }

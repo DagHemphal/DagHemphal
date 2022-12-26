@@ -58,10 +58,16 @@ def get_games():
 	res = query_db("""select id, year_date from Game Order by id desc""")
 	return jsonify(res)
 
-@app.route('/api/get_games')
-def get_games():
-	res = query_db("""select id, year_date from Game Order by id desc""")
-	return jsonify(res)
+@app.route('/api/get_users')
+def get_users():
+	res = query_db("""select name, game_id from user order by game_id,name""")
+	print(res)
+	resReorded = [[],[],[]]
+	for i in res:
+		resReorded[i[1]-1].append(i[0])
+
+	print(resReorded)
+	return jsonify(resReorded)
 
 @app.route('/api/join', methods=['POST'])
 def show_sodas():
