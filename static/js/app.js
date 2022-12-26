@@ -91,7 +91,7 @@ $(document).ready(function(e) {
 		
 	});
 
-	$.get( "./api/get_games", function( data ) {
+	$.get( "./api/get_games/", function( data ) {
 		console.log(data);
 		var select = $("#game");
 		var ret;
@@ -102,7 +102,7 @@ $(document).ready(function(e) {
 		select.append(ret);
 	});
 
-	$.get( "./api/get_users", function( data ) {
+	$.get( "./api/get_users/", function( data ) {
 		console.log(data);
 		var usernameInput = document.getElementById("usernameInput");		
 		usernameInput.addEventListener("keyup", function () {autoComplete(data);}, false);
@@ -124,7 +124,7 @@ $(document).ready(function(e) {
 
 		$.ajax({
 		    type: 'POST',
-		    url: './api/join',
+		    url: './api/join/',
 		    data: JSON.stringify(data),
 		    success: function( data ) {
 			  console.log(data);
@@ -178,7 +178,7 @@ $(document).ready(function(e) {
 			console.log(data);
 	  		$.ajax({
 			    type: 'POST',
-			    url: './api/done',
+			    url: './api/done/',
 			    data: JSON.stringify (data),
 			    success: function(data) { 
 			    	console.log(data);

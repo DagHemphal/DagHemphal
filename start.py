@@ -36,29 +36,29 @@ def query_db(query, args=(), one=False):
 	return (rv[0] if rv else None) if one else rv
 
 
-@app.route("/")
+@app.route("//")
 def home():
 	return app.send_static_file('index.html')
 
-@app.route("/info")
+@app.route("/info/")
 def info():
 	return app.send_static_file('info.html')
 
-@app.route("/gamemaster")
+@app.route("/gamemaster/")
 def game():
 	return app.send_static_file('game.html')
 
-@app.route("/sqlinit")
+@app.route("/sqlinit/")
 def init():
 	init_db()
 	return "inited"
 
-@app.route('/api/get_games')
+@app.route('/api/get_games/')
 def get_games():
 	res = query_db("""select id, year_date from Game Order by id desc""")
 	return jsonify(res)
 
-@app.route('/api/get_users')
+@app.route('/api/get_users/')
 def get_users():
 	res = query_db("""select name, game_id from user order by game_id,name""")
 	print(res)
@@ -69,7 +69,7 @@ def get_users():
 	print(resReorded)
 	return jsonify(resReorded)
 
-@app.route('/api/join', methods=['POST'])
+@app.route('/api/join/', methods=['POST'])
 def show_sodas():
 	if request.is_json:
 		data = request.get_json()
@@ -127,7 +127,7 @@ def show_sodas():
 
 
 #post
-@app.route('/api/done', methods=['POST'])
+@app.route('/api/done/', methods=['POST'])
 def send_soda_rankning():
 	if request.is_json:
 		sodas = request.get_json()
@@ -175,7 +175,7 @@ def send_soda_rankning():
 	return jsonify(message='Error')
 
 
-@app.route('/api/add_soda', methods=['POST'])
+@app.route('/api/add_soda/', methods=['POST'])
 def add_soda():
 	if request.is_json:
 		soda = request.get_json().rstrip()
@@ -187,7 +187,7 @@ def add_soda():
 	return jsonify(message='error')
 
 #todo select by game_id
-@app.route('/api/get_score', methods=['POST'])
+@app.route('/api/get_score/', methods=['POST'])
 def get_score():
 	if request.is_json:
 		game_id = request.get_json()
@@ -199,13 +199,13 @@ def get_score():
 		return jsonify(res)
 	return jsonify(message='error')
 
-@app.route('/api/new_game')
+@app.route('/api/new_game/')
 def new_game():
 	res = query_db("insert INTO Game (year_date) SELECT DATE()")
 	return new_round()
 
 
-@app.route('/api/new_round')
+@app.route('/api/new_round/')
 def new_round():
 
 	#create new round
@@ -219,7 +219,7 @@ def new_round():
 
 	return get_round()
 
-@app.route('/api/get_round')
+@app.route('/api/get_round/')
 def get_round():
 	res = query_db("""select *
 		from Round 
