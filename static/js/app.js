@@ -91,6 +91,18 @@ $(document).ready(function(e) {
 		
 	});
 
+	history.replaceState({page: 1}, "home page");
+	window.addEventListener('popstate', (event) => {
+		console.log(`location: ${document.location}, state: ${JSON.stringify(event.state)}`);
+		if (event.state.page == 1) {
+			$("#wrapper").hide();
+			$("form").show();
+		} else if (event.state.page == 2) {
+			$("#wrapper").show();
+			$("form").hide();
+		}
+	});
+
 	$.get( "./api/get_games/", function( data ) {
 		console.log(data);
 		var select = $("#game");
@@ -115,7 +127,8 @@ $(document).ready(function(e) {
 		var game_id = $("#game").val();
 		console.log(game_id);
 		var username = $("input[name ='username']").val();
-		$("#best").append("&nbsp;&nbsp;  -  &nbsp;" + username);
+		$("#best").empty()
+		$("#best").append("Bäst&nbsp;&nbsp;  -  &nbsp;" + username);
 		var data = [];
 		data.push({
 	  			game_id: game_id,
@@ -129,8 +142,10 @@ $(document).ready(function(e) {
 		    success: function( data ) {
 			  console.log(data);
 			  var html = "";
-			  if (typeof data[0][1] === 'string')
+			  if (typeof data[0][1] === 'string') {
+				$('#points').remove();
 				$('#top').append('<a id="points" href="./info/">Se poängtavla</a>');
+			  }
 			  for (li of data) {
 			  	if (typeof li[1] === 'string') {
 			  		html += '<li class="must">'
@@ -146,12 +161,15 @@ $(document).ready(function(e) {
 					html += '</li>'
 				}
 			  }
+			  $("#order").empty();
 			  $("#order").append(html);
 			  $("#wrapper").show();
 			  $("form").hide();
 			  localStorage.setItem('game_id', game_id);
 			  if (data)
 			  localStorage.setItem('username', username);
+
+			  history.pushState({ page: 2 }, "user page");
 			},
 			contentType: "application/json",
 			dataType: 'json'
