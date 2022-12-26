@@ -50,7 +50,7 @@ def game():
 
 @app.route("/sqlinit/")
 def init():
-	init_db()
+	#init_db()
 	return "inited"
 
 @app.route('/api/get_games/')
