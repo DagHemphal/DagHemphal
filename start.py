@@ -58,11 +58,16 @@ def get_games():
 	res = query_db("""select id, year_date from Game Order by id desc""")
 	return jsonify(res)
 
+@app.route('/api/get_games')
+def get_games():
+	res = query_db("""select id, year_date from Game Order by id desc""")
+	return jsonify(res)
+
 @app.route('/api/join', methods=['POST'])
 def show_sodas():
 	if request.is_json:
 		data = request.get_json()
-		username = data[0]['username']
+		username = data[0]['username'].rstrip()
 		game_id = data[0]['game_id']
 		
 
@@ -167,7 +172,7 @@ def send_soda_rankning():
 @app.route('/api/add_soda', methods=['POST'])
 def add_soda():
 	if request.is_json:
-		soda = request.get_json()
+		soda = request.get_json().rstrip()
 
 		res = query_db("""insert or ignore into soda(game_id, name) 
 			SELECT MAX(id), LOWER(?) FROM Game
