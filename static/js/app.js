@@ -130,7 +130,7 @@ $(document).ready(function(e) {
 			  console.log(data);
 			  var html = "";
 			  if (typeof data[0][1] === 'string')
-				$('#top').append('<a id="points" href="info">Se poängtavla</a>');
+				$('#top').append('<a id="points" href="./info/">Se poängtavla</a>');
 			  for (li of data) {
 			  	if (typeof li[1] === 'string') {
 			  		html += '<li class="must">'
@@ -191,7 +191,7 @@ $(document).ready(function(e) {
 				    		$('#send').off('click');
 				    		$('#order').off('taphold');
 				    	}
-				    	$('#top').append('<a id="points" href="/info/">Se poängtavla</a>');
+				    	$('#top').append('<a id="points" href="./info/">Se poängtavla</a>');
 
 					}			    	
 			    },
