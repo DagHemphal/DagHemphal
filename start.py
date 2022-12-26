@@ -36,7 +36,7 @@ def query_db(query, args=(), one=False):
 	return (rv[0] if rv else None) if one else rv
 
 
-@app.route("//")
+@app.route("/")
 def home():
 	return app.send_static_file('index.html')
 
@@ -61,12 +61,10 @@ def get_games():
 @app.route('/api/get_users/')
 def get_users():
 	res = query_db("""select name, game_id from user order by game_id,name""")
-	print(res)
 	resReorded = [[],[],[]]
 	for i in res:
 		resReorded[i[1]-1].append(i[0])
 
-	print(resReorded)
 	return jsonify(resReorded)
 
 @app.route('/api/join/', methods=['POST'])

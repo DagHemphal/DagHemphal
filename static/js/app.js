@@ -191,7 +191,7 @@ $(document).ready(function(e) {
 				    		$('#send').off('click');
 				    		$('#order').off('taphold');
 				    	}
-				    	$('#top').append('<a id="points" href="/info">Se poängtavla</a>');
+				    	$('#top').append('<a id="points" href="/info/">Se poängtavla</a>');
 
 					}			    	
 			    },
