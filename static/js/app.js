@@ -224,6 +224,7 @@ function autoComplete(usersData) {
 	var game_id = $("#game").val();
 	let userDataGame = usersData[game_id-1];
 	var usernameInput = document.getElementById("usernameInput");
+	
 	removeElements();
 	for (let i of userDataGame) {
 		//convert input to lowercase and compare with each string
@@ -242,6 +243,7 @@ function autoComplete(usersData) {
 			document.querySelector(".list").appendChild(listItem);
 		}
 	}
+	usernameInput.scrollIntoView({behavior: "auto", block: "center", inline: "center"});
 }
 
 function displayNames(value) {
